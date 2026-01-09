@@ -8,6 +8,5 @@ if __name__ == '__main__':
     setup_theme(app)
     windows = MainWindows()
     windows.show()
-    
     windows.adjust_fixed_size()
     app.exec()

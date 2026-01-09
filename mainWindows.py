@@ -1,7 +1,7 @@
 import sys
 from display import Display
 from info import Info
-from buttons import Button
+from buttons import Button, ButtonGrid
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import  QMainWindow, QWidget,  QVBoxLayout
 
@@ -21,9 +21,9 @@ class MainWindows(QMainWindow):
         display = Display()
         self.add_layout(display)
 
-        button = Button('tecla nova')
-        self.add_layout(button)
-    
+        button_grid = ButtonGrid(display)
+        self.layout.addLayout(button_grid)
+
     def add_layout(self, widget : QWidget):
         self.layout.addWidget(widget)
 

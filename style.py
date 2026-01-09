@@ -1,4 +1,4 @@
-from variables import PRIMARY_COLOR, SECUNDARY_COLOR, TERCIARY_COLOR
+from variables import PRIMARY_COLOR, SECUNDARY_COLOR, TERCIARY_COLOR, WHITE_COLOR
 from qt_material import apply_stylesheet
     
 def setup_theme(app):
@@ -6,8 +6,8 @@ def setup_theme(app):
     apply_stylesheet(app, theme='dark_purple.xml')
 
     style_button = f"""
-        Button[class="button"] {{
-            color: {PRIMARY_COLOR};
+        Button {{
+            color: {WHITE_COLOR};
             border radius: 5px;
             font-size: 15px;
             font-weight: bold;
@@ -15,12 +15,16 @@ def setup_theme(app):
             min-height: 75;
         }}
 
+        Button#operacoes{{
+            background-color: {PRIMARY_COLOR};
+        }}
+
         Button:hover{{
-            color: {TERCIARY_COLOR};
+            background-color: {SECUNDARY_COLOR};
         }}
 
         Button:pressed{{
-            color: {SECUNDARY_COLOR}
+            background-color: {TERCIARY_COLOR}
         }}
 """
 
