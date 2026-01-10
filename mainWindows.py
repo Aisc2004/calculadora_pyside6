@@ -15,7 +15,7 @@ class MainWindows(QMainWindow):
         self.layout = QVBoxLayout()
         self.main_widget.setLayout(self.layout)
         
-        info = Info('visulização da conta')
+        info = Info('r')
         self.add_layout(info)
 
         display = Display()

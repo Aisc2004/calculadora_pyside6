@@ -2,6 +2,8 @@ from PySide6.QtWidgets import QPushButton, QGridLayout
 import re
 from PySide6.QtCore import Slot
 from display import Display
+from info import Info
+
 class Button(QPushButton):
     """
     Inicializa a função botão 
@@ -17,7 +19,7 @@ class ButtonGrid(QGridLayout):
     """
     Classe que faz a formatação em grid dos botões
     """
-    def __init__(self, display : Display,  *args, **kwargs ):
+    def __init__(self, display : Display, info: Info , *args, **kwargs ):
         super().__init__(*args, **kwargs)
 
         self._list_buttons = [
@@ -28,7 +30,19 @@ class ButtonGrid(QGridLayout):
             ['',  '0', '.', '='],
         ]
         self.display = display
+        self.info = info
+        self._equation = ''
         self._make_button()
+
+        @property
+        def equation(self):
+            return self._equation
+        
+        @equation.setter
+        def equation(self, value):
+            self._equation = value
+            self.info.setText(value)
+
     
     def is_numeric_or_dot(self, string):
         """
@@ -37,6 +51,15 @@ class ButtonGrid(QGridLayout):
         """
         num_or_dot = re.compile(r'^[0-9.]$')
         return bool(num_or_dot.search(string))
+    
+    def valid_number(self, string):
+        valid = False
+        try:
+            float(string)
+            valid = True
+        except:
+            valid = False
+        return valid
     
     def _make_button(self):
         """
@@ -66,6 +89,12 @@ class ButtonGrid(QGridLayout):
 
     def _insert_text_in_button(self, button):
         button_text = button.text()
+        value_new_display = self.display.text() + button_text
+
+        if not self.valid_number(value_new_display):
+            return
+        
         self.display.insert(button_text)
+
 
 
