@@ -1,9 +1,8 @@
 import sys
 from display import Display
 from info import Info
-from buttons import Button, ButtonGrid
-from PySide6.QtCore import Slot
-from PySide6.QtWidgets import  QMainWindow, QWidget,  QVBoxLayout
+from buttons import ButtonGrid
+from PySide6.QtWidgets import  QMainWindow, QWidget,  QVBoxLayout, QMessageBox
 
 class MainWindows(QMainWindow):
     def __init__(self, parent=None):
@@ -15,21 +14,25 @@ class MainWindows(QMainWindow):
         self.layout = QVBoxLayout()
         self.main_widget.setLayout(self.layout)
         
-        info = Info('r')
-        self.add_layout(info)
+        self.info = Info('r')
+        self.add_layout(self.info)
 
-        display = Display()
-        self.add_layout(display)
+        self.display = Display()
+        self.add_layout(self.display)
 
-        button_grid = ButtonGrid(display)
+        button_grid = ButtonGrid(self.display, self.info, self)
         self.layout.addLayout(button_grid)
-
+    
     def add_layout(self, widget : QWidget):
         self.layout.addWidget(widget)
 
     def adjust_fixed_size(self):
         self.adjustSize()
         self.setFixedSize(self.width(), self.height())
+
+    def make_msg_box(self):
+        msg_box =  QMessageBox(self)
+        return msg_box
 
         
 
