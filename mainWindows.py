@@ -14,7 +14,7 @@ class MainWindows(QMainWindow):
         self.layout = QVBoxLayout()
         self.main_widget.setLayout(self.layout)
         
-        self.info = Info('r')
+        self.info = Info('')
         self.add_layout(self.info)
 
         self.display = Display()

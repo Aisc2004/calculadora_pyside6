@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QPushButton, QGridLayout
-import re
 from PySide6.QtCore import Slot
 from display import Display
 from info import Info
+import re
 
 class Button(QPushButton):
     """
