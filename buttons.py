@@ -23,7 +23,7 @@ class ButtonGrid(QGridLayout):
         super().__init__(*args, **kwargs)
 
         self._list_buttons = [
-            ['C', 'DEL', '^', '/'],
+            ['C', 'D', '^', '/'],
             ['7', '8', '9', '*'],
             ['4', '5', '6', '-'],
             ['1', '2', '3', '+'],
@@ -72,6 +72,11 @@ class ButtonGrid(QGridLayout):
         Se a função is_numeric retornar False, é um caractere especial e vai receber um 
         style diferente. 
         """
+        self.display.eq_request.connect(self._equality)
+        self.display.del_request.connect(self.display.backspace)
+        self.display.clear_request.connect(self._clear)
+        self.display.input_request.connect(self._insert_text_in_button)
+        self.display.input_operator.connect(self._operator_clicked)
 
         for i, row in enumerate(self._list_buttons):
             for j, button_text in enumerate(row):
@@ -80,7 +85,7 @@ class ButtonGrid(QGridLayout):
 
                 if self.is_numeric_or_dot(button_text):
                     button_slot = self._make_button_display_slot(
-                    self._insert_text_in_button, button
+                    self._insert_text_in_button, button_text
                 )
                     self._connect_button_clicked(button, button_slot)
                 else:
@@ -102,28 +107,28 @@ class ButtonGrid(QGridLayout):
         if text == 'C':
             self._connect_button_clicked(button, self._clear)
 
-        if text == 'DEL':
+        if text == 'D':
             self._connect_button_clicked(button, self.display.backspace)
 
         if text in '+-/*^':
             self._connect_button_clicked(
-                button, self._make_button_display_slot(self._operator_clicked, button)
+                button, self._make_button_display_slot(self._operator_clicked, text)
             )
 
         if text == '=':
             self._connect_button_clicked(
                 button, self._equality)
 
+    @Slot()
+    def _insert_text_in_button(self, text):
+        value_new_display = self.display.text() + text
 
-    def _insert_text_in_button(self, button):
-        button_text = button.text()
-        value_new_display = self.display.text() + button_text
-
-        if not self.valid_number(value_new_display) and button_text not in '+-=*/^':
+        if not self.valid_number(value_new_display) and text not in '+-=*/^':
             return
         
-        self.display.insert(button_text)
+        self.display.insert(text)
 
+    @Slot()
     def _clear(self):
         self.left = None
         self.right = None
@@ -131,21 +136,22 @@ class ButtonGrid(QGridLayout):
         self.equation = ''
         self.display.clear()
 
-    def _operator_clicked(self, button):
-        button_text = button.text()
+    @Slot()
+    def _operator_clicked(self, text):
         display_text = self.display.text()
 
         if not self.valid_number(display_text):
-            self._showError('Coloque um númro')
+            self._showError('Coloque um númrero')
             return
         
         if self.left is None:
             self.left = float(display_text)
 
-        self.operator = button_text
+        self.operator = text
         self.equation = f'{self.left} {self.operator}'
         self.display.clear()
 
+    @Slot()
     def _equality(self):
         display_text = self.display.text()
 

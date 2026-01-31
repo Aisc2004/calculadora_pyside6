@@ -12,7 +12,7 @@ if __name__ == '__main__':
     windows.show()
     windows.adjust_fixed_size()
     app.exec()
-    
+     
     
 
     
