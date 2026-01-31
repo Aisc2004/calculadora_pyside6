@@ -27,7 +27,7 @@ class ButtonGrid(QGridLayout):
             ['7', '8', '9', '*'],
             ['4', '5', '6', '-'],
             ['1', '2', '3', '+'],
-            ['',  '0', '.', '='],
+            ['0', '.', '='],
         ]
         self.display = display
         self.info = info
@@ -73,7 +73,7 @@ class ButtonGrid(QGridLayout):
         style diferente. 
         """
         self.display.eq_request.connect(self._equality)
-        self.display.del_request.connect(self.display.backspace)
+        self.display.del_request.connect(self._backspace)
         self.display.clear_request.connect(self._clear)
         self.display.input_request.connect(self._insert_text_in_button)
         self.display.input_operator.connect(self._operator_clicked)
@@ -81,7 +81,13 @@ class ButtonGrid(QGridLayout):
         for i, row in enumerate(self._list_buttons):
             for j, button_text in enumerate(row):
                 button = Button(button_text)
-                self.addWidget(button , i, j)
+
+                if button_text == '0':
+                    self.addWidget(button, i, j, 1, 2) 
+                elif i == 4 and j > 0:
+                    self.addWidget(button, i, j + 1)
+                else:
+                    self.addWidget(button, i, j)
 
                 if self.is_numeric_or_dot(button_text):
                     button_slot = self._make_button_display_slot(
@@ -127,6 +133,7 @@ class ButtonGrid(QGridLayout):
             return
         
         self.display.insert(text)
+        self.display.setFocus()
 
     @Slot()
     def _clear(self):
@@ -135,6 +142,7 @@ class ButtonGrid(QGridLayout):
         self.operator = None
         self.equation = ''
         self.display.clear()
+        self.display.setFocus()
 
     @Slot()
     def _operator_clicked(self, text):
@@ -153,6 +161,7 @@ class ButtonGrid(QGridLayout):
         self.operator = text
         self.equation = f'{self.left} {self.operator}'
         self.display.clear()
+        self.display.setFocus()
 
     @Slot()
     def _equality(self):
@@ -179,12 +188,17 @@ class ButtonGrid(QGridLayout):
             self.left = result
             self.right = None
             self.operator = None
+            self.display.setFocus()
         
         except ZeroDivisionError:
             self._showError('Divisão por zero')
 
         except OverflowError:
              self._showError('Overflow')
+    @Slot()
+    def _backspace(self):
+        self.display.backspace()
+        self.display.setFocus()
 
     def _makeDialog(self, text):
         msgBox = self.window.make_msg_box()
@@ -195,3 +209,4 @@ class ButtonGrid(QGridLayout):
         msgBox = self._makeDialog(text)
         msgBox.setIcon(msgBox.Icon.Critical)
         msgBox.exec()
+        self.display.setFocus()

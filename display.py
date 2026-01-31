@@ -1,8 +1,7 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QLineEdit
 from PySide6.QtGui import QKeyEvent
-from utils import is_numeric_or_dot
-from variables import BIG_FONT_SIZE, TEXT_MARGIN, MINIMUM_WIDTH
+from variables import BIG_FONT_SIZE, TEXT_MARGIN, MINIMUM_WIDTH, is_numeric_or_dot
 
 class Display(QLineEdit):
     eq_request = Signal()
