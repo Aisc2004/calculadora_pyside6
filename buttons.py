@@ -60,8 +60,8 @@ class ButtonGrid(QGridLayout):
     def valid_number(self, string):
         valid = False
         try:
-            float(string)
-            valid = True
+            if float(string) or string == '-':
+                valid = True
         except:
             valid = False
         return valid
@@ -141,7 +141,10 @@ class ButtonGrid(QGridLayout):
         display_text = self.display.text()
 
         if not self.valid_number(display_text):
-            self._showError('Coloque um númrero')
+            if text == '-' and display_text == '':
+                self.display.insert(text)
+                return
+            self._showError('Coloque um número')
             return
         
         if self.left is None:
@@ -158,8 +161,11 @@ class ButtonGrid(QGridLayout):
         if not self.valid_number(display_text) or self.operator is None:
             return
         
+        
         self.right = float(display_text)
+
         self.equation = f'{self.left} {self.operator} {self.right}'
+
         result = 'error'
 
         try:
