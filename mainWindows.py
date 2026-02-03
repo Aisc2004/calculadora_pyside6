@@ -1,4 +1,3 @@
-import sys
 from display import Display
 from info import Info
 from buttons import ButtonGrid
